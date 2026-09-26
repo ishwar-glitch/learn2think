@@ -1,18 +1,34 @@
 import { useEffect, useState } from 'react';
-import { isConfigured, signInWithGoogle, sendEmailLink, completeEmailLink } from '../lib/firebase';
+import { onAuthStateChanged, type User } from 'firebase/auth';
+import { auth, isConfigured, signInWithGoogle, sendEmailLink, completeEmailLink, logOut } from '../lib/firebase';
 
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [msg, setMsg] = useState('');
+  const [user, setUser] = useState<User | null>(null);
   const ready = isConfigured();
 
+  useEffect(() => onAuthStateChanged(auth, setUser), []);
+
   useEffect(() => {
-    if (ready) completeEmailLink().then((u) => u && (location.href = '/')).catch((e) => setMsg('✕ ' + e.message));
+    if (ready) completeEmailLink().catch((e) => setMsg('✕ ' + e.message));
   }, [ready]);
 
   const run = async (fn: () => Promise<unknown>, ok?: string) => {
     try { await fn(); if (ok) setMsg(ok); } catch (e) { setMsg('✕ ' + (e as Error).message); }
   };
+
+  if (user) {
+    return (
+      <div className="max-w-sm space-y-4">
+        <p role="status" className="border-l-4 border-willow bg-surface-2 p-3 text-sm">
+          ✓ Signed in as {user.email ?? user.displayName}
+        </p>
+        <a href="/" className="inline-block rounded-full bg-accent px-5 py-3 font-semibold text-on-accent">Continue</a>
+        <button onClick={() => logOut()} className="ml-3 rounded-full border border-line-strong px-5 py-3 font-medium">Sign out</button>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-sm space-y-4">
