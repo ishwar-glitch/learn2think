@@ -21,7 +21,7 @@
   --color-sunken: var(--sunken); --color-hero: var(--hero); --color-line: var(--border);
   --color-line-strong: var(--border-strong); --color-ink: var(--text); --color-ink-2: var(--text-2);
   --color-ink-3: var(--text-3); --color-accent: var(--accent); --color-on-accent: var(--on-accent);
-  --color-ok: var(--ok); --color-cream: #EAEFBD; --color-tea: #C9E3AC; --color-willow: #90BE6D;
+  --color-ok: var(--ok); --color-ok-soft: var(--ok-soft); --color-warn-line: var(--warn-line); --color-warn-soft: var(--warn-soft); --color-cream: #EAEFBD; --color-tea: #C9E3AC; --color-willow: #90BE6D;
   --color-carrot: #EA9010; --color-khaki: #37371F;
   --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
 }

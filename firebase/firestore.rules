@@ -39,6 +39,21 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    // Waitlist: public create-only. Doc ID = sha256 hex of lowercase email (dedupe);
+    // a repeat signup is an update, which is denied. No reads, updates or deletes.
+    match /waitlist/{id} {
+      allow read, update, delete: if false;
+      allow create: if id.matches('^[0-9a-f]{64}$')
+        && request.resource.data.keys().hasOnly(['email', 'role', 'learner', 'createdAt'])
+        && request.resource.data.keys().hasAll(['email', 'role', 'learner', 'createdAt'])
+        && request.resource.data.email is string
+        && request.resource.data.email.size() <= 254
+        && request.resource.data.email.matches('^[^@ ]+@[^@ ]+[.][^@ ]+$')
+        && request.resource.data.role in ['BA', 'DA', 'PM', 'PD', 'Not sure']
+        && request.resource.data.learner in ['student', 'switcher']
+        && request.resource.data.createdAt == request.time;
+    }
+
     match /{document=**} { allow read, write: if false; }
   }
 }

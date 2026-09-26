@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { beforeAll, afterAll, beforeEach, describe, it } from 'vitest';
 import { initializeTestEnvironment, assertSucceeds, assertFails } from '@firebase/rules-unit-testing';
-import { doc, getDoc, setDoc, updateDoc, deleteDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
 let env;
 const OWNED = ['profiles', 'plans', 'attempts', 'case_sessions', 'submissions',
@@ -94,4 +94,33 @@ describe('unknown collections', () => {
     await assertFails(setDoc(doc(as('alice'), 'mystery/x'), { uid: 'alice' }));
     await assertFails(getDoc(doc(as('alice'), 'mystery/x')));
   });
+});
+
+describe('waitlist (create-only)', () => {
+  const ID = 'a'.repeat(64);
+  const good = () => ({ email: 'a@b.co', role: 'DA', learner: 'student', createdAt: serverTimestamp() });
+  const at = (db, id = ID) => doc(db, `waitlist/${id}`);
+
+  it('anonymous visitor can create a valid entry', () => assertSucceeds(setDoc(at(anon()), good())));
+  it('second signup with same id is denied (dedupe)', async () => {
+    await assertSucceeds(setDoc(at(anon()), good()));
+    await assertFails(setDoc(at(anon()), good()));
+  });
+  it('denies read, update, delete', async () => {
+    await seed(`waitlist/${ID}`, { email: 'a@b.co', role: 'DA', learner: 'student' });
+    await assertFails(getDoc(at(anon())));
+    await assertFails(getDoc(at(as('alice'))));
+    await assertFails(updateDoc(at(anon()), { role: 'PM' }));
+    await assertFails(deleteDoc(at(anon())));
+  });
+  it.each([
+    ['bad email', { email: 'nope' }],
+    ['long email', { email: 'a'.repeat(250) + '@b.co' }],
+    ['bad role', { role: 'CEO' }],
+    ['bad learner', { learner: 'x' }],
+    ['extra field', { hp: 'bot' }],
+    ['client timestamp', { createdAt: new Date() }],
+  ])('rejects %s', (_n, patch) => assertFails(setDoc(at(anon()), { ...good(), ...patch })));
+  it('rejects missing field', () => { const g = good(); delete g.role; return assertFails(setDoc(at(anon()), g)); });
+  it('rejects a non-hash id', () => assertFails(setDoc(at(anon(), 'me@x.com'), good())));
 });

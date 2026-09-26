@@ -5,7 +5,6 @@ import { auth, isConfigured, signInWithGoogle, logOut } from '../lib/firebase';
 export default function SignIn() {
   const [phone, setPhone] = useState('+91');
   const [code, setCode] = useState('');
-  const [pending, setPending] = useState<ConfirmationResult | null>(null);
   const [msg, setMsg] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const ready = isConfigured();

@@ -12,11 +12,13 @@
   "dependencies": {
     "@astrojs/check": "^0.9.10",
     "@astrojs/react": "^7.0.0",
+    "@sentry/browser": "^11.0.0",
     "@tailwindcss/vite": "^4.3.3",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "astro": "^7.3.5",
     "firebase": "^12.19.0",
+    "posthog-js": "^1.434.15",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
     "tailwindcss": "^4.3.3"

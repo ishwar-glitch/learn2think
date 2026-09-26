@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
-const { title = 'Learn2Think' } = Astro.props;
+import Telemetry from '../islands/Telemetry.tsx';
+const { title = 'Learn2Think', description = '' } = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -8,6 +9,7 @@ const { title = 'Learn2Think' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    {description && <meta name="description" content={description} />}
     <link rel="icon" type="image/svg+xml" href="/brand/app-icon-chatgpt-v1.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -18,5 +20,5 @@ const { title = 'Learn2Think' } = Astro.props;
       } catch (e) {}
     </script>
   </head>
-  <body class="min-h-screen"><slot /></body>
+  <body class="min-h-screen"><slot /><Telemetry client:idle /></body>
 </html>
