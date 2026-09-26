@@ -1,6 +1,6 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, sendSignInLinkToEmail,
-  isSignInWithEmailLink, signInWithEmailLink, signOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier,
+  signInWithPhoneNumber, signOut, type ConfirmationResult } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Placeholder config from .env (see .env.example). No Firebase project exists yet.
@@ -21,18 +21,18 @@ export const db = getFirestore(app);
 
 export const signInWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
 
-export async function sendEmailLink(email: string) {
-  await sendSignInLinkToEmail(auth, email, { url: `${location.origin}/signin`, handleCodeInApp: true });
-  localStorage.setItem('l2t-email', email);
-}
+let verifier: RecaptchaVerifier | null = null;
 
-export async function completeEmailLink() {
-  if (!isSignInWithEmailLink(auth, location.href)) return null;
-  const email = localStorage.getItem('l2t-email') ?? window.prompt('Confirm your email to finish signing in');
-  if (!email) return null;
-  const cred = await signInWithEmailLink(auth, email, location.href);
-  localStorage.removeItem('l2t-email');
-  return cred.user;
+// Sends an SMS code. `container` is the id of an empty element for the (invisible) reCAPTCHA check.
+export async function sendPhoneCode(phone: string, container: string): Promise<ConfirmationResult> {
+  verifier ??= new RecaptchaVerifier(auth, container, { size: 'invisible' });
+  try {
+    return await signInWithPhoneNumber(auth, phone, verifier);
+  } catch (e) {
+    verifier.clear();
+    verifier = null;
+    throw e;
+  }
 }
 
 export const logOut = () => signOut(auth);
