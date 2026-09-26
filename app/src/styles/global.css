@@ -1,0 +1,30 @@
+@import "tailwindcss";
+@variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --bg: #FAFBF3; --surface: #FFFFFF; --surface-2: #F3F6E3; --sunken: #ECF0D6;
+  --hero: #EAEFBD; --border: #E1E7CB; --border-strong: #8A8B6A;
+  --text: #37371F; --text-2: #56563F; --text-3: #65654D;
+  --accent: #EA9010; --on-accent: #37371F; --focus: #B86E00;
+  --ok: #90BE6D; --ok-line: #5E8A3E; --ok-soft: #E3F0D4;
+  --warn-line: #B86E00; --warn-soft: #FCEBCF;
+}
+:root[data-theme="dark"] {
+  --bg: #2E2E19; --surface: #37371F; --surface-2: #414128; --sunken: #26261A;
+  --hero: #45452B; --border: #4E4E33; --border-strong: #9A9B78;
+  --text: #EAEFBD; --text-2: #D2D6AE; --text-3: #B9BC98;
+  --focus: #EA9010; --ok-line: #90BE6D; --ok-soft: #414128;
+  --warn-line: #EA9010; --warn-soft: #414128;
+}
+@theme inline {
+  --color-bg: var(--bg); --color-surface: var(--surface); --color-surface-2: var(--surface-2);
+  --color-sunken: var(--sunken); --color-hero: var(--hero); --color-line: var(--border);
+  --color-line-strong: var(--border-strong); --color-ink: var(--text); --color-ink-2: var(--text-2);
+  --color-ink-3: var(--text-3); --color-accent: var(--accent); --color-on-accent: var(--on-accent);
+  --color-ok: var(--ok); --color-cream: #EAEFBD; --color-tea: #C9E3AC; --color-willow: #90BE6D;
+  --color-carrot: #EA9010; --color-khaki: #37371F;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+html { background: var(--bg); color: var(--text); font-family: var(--font-sans); font-size: 16px; line-height: 1.6; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }

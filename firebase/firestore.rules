@@ -1,0 +1,44 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isOwner() { return signedIn() && resource.data.uid == request.auth.uid; }
+    function willOwn() { return signedIn() && request.resource.data.uid == request.auth.uid; }
+
+    // Owner-only collections: every document carries a `uid` field.
+    // (Execution Plan section 4.) Users cannot change a document's uid.
+    match /{col}/{id} {
+      allow read, delete: if isOwner() && col in [
+        'profiles', 'plans', 'attempts', 'case_sessions', 'submissions',
+        'thinking_records', 'stories', 'interview_attempts', 'rep_queue'];
+      allow create: if willOwn() && col in [
+        'profiles', 'plans', 'attempts', 'case_sessions', 'submissions',
+        'thinking_records', 'stories', 'interview_attempts', 'rep_queue'];
+      allow update: if isOwner() && willOwn() && col in [
+        'profiles', 'plans', 'attempts', 'case_sessions', 'submissions',
+        'thinking_records', 'stories', 'interview_attempts', 'rep_queue'];
+    }
+
+    // Portfolio items: owner full access; anyone may read only when public == true.
+    match /portfolio_items/{id} {
+      allow read: if resource.data.public == true || isOwner();
+      allow create: if willOwn();
+      allow update: if isOwner() && willOwn();
+      allow delete: if isOwner();
+    }
+
+    // Written only by Cloud Functions (Razorpay webhook, admin review); owner may read.
+    match /subscriptions/{id} {
+      allow read: if isOwner();
+      allow write: if false;
+    }
+    match /expert_reviews/{id} {
+      allow read: if isOwner();
+      allow create: if willOwn() && request.resource.data.status == 'requested';
+      allow update, delete: if false;
+    }
+
+    match /{document=**} { allow read, write: if false; }
+  }
+}

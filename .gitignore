@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+.astro/
+.wrangler/
+.firebase/
+*-debug.log
+*.log
+serviceAccount*.json
+*.pem
+__pycache__/
+.DS_Store
+Thumbs.db
+.claude/settings.local.json

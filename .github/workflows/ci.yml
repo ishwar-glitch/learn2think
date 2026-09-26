@@ -1,0 +1,23 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm, cache-dependency-path: '**/package-lock.json' }
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '17' }
+      - name: Content validators
+        run: |
+          for d in content/core/*/; do [ -d "$d" ] || continue; python tools/validate_quiz.py "$d" || exit 1; done
+          python tools/validate_universe.py content/universe
+      - name: Firestore rules tests
+        working-directory: firebase
+        run: npm ci && npm test
+      - name: Build app
+        working-directory: app
+        run: npm ci && npx astro build
