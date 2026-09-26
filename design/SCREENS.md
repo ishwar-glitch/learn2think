@@ -34,7 +34,7 @@ Built to the same patterns (calm, no guilt, one action per screen). Each needs a
 
 | Not drawn | Rule for the builder | Batch |
 |---|---|---|
-| Sign in / create account | Google and email link only; appears after Day-1 (03), never before | P1, P10 |
+| Sign in / create account | Google only; appears after Day-1 (03), never before | P1, P10 |
 | Empty states (no cases, no stories, no records, no saved JDs) | One sentence and one button; no blank pages | with each screen |
 | Error and offline states | Plain message, saved work is never lost, retry button | with each screen; P30 |
 | Settings and account (profile, weekly goal, plan pace, notifications, data export and delete, 18+) | Under a profile menu on Home, not in the bottom bar | P25, P10 |
