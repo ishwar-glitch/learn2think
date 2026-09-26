@@ -52,7 +52,7 @@ Pro usage resets on a rolling 5-hour window and also has a weekly cap. **Claude.
 |---|---|---|---|
 | Web app | **Astro + React islands + TypeScript + Tailwind** | ₹0 | Content-first; markdown content collections with schema validation; static pages load fast on low-end phones |
 | Hosting | **Cloudflare Pages** | ₹0 (commercial use allowed) | Free tier with a generous request limit |
-| Auth, database, server functions | **Firebase** (Auth: Google + email link; Firestore with Security Rules; Cloud Functions) | ₹0 within free quotas; Blaze plan (card on file) required for Functions; budget alert at ₹500 | Founder already knows the Firebase console; no server to maintain |
+| Auth, database, server functions | **Firebase** (Auth: Google sign-in; Firestore with Security Rules; Cloud Functions) | ₹0 within free quotas; Blaze plan (card on file) required for Functions; budget alert at ₹500 | Founder already knows the Firebase console; no server to maintain |
 | Payments | **Razorpay** Subscriptions | ~2% per transaction, no monthly fee | Indian cards, UPI and wallets |
 | SQL sandbox (DA) | **sql.js** (SQLite in the browser) | ₹0 | Runs on the learner's device; the V1 validator already checks SQL answers |
 | Email | **Resend** free tier | ₹0 | Magic links, welcome email, weekly recap |

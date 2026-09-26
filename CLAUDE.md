@@ -22,7 +22,7 @@ Founder = non-coder domain expert who directs; Claude writes all code and conten
 - Tell the founder in ≤ 10 lines: done / failed / needs review, then suggest a fresh session for the next batch.
 
 ## Stack (details: Execution Plan §3–4)
-Astro + React islands + TypeScript + Tailwind in `app/` · content from `../content` via content collections (zod) · Firebase (Auth, Firestore + Security Rules, Cloud Functions; test rules in the emulator) · Cloudflare Pages · Razorpay · sql.js · PostHog · Resend · Sentry.
+Astro + React islands + TypeScript + Tailwind in `app/` · content from `../content` via content collections (zod) · Firebase (Auth: Google only, Firestore + Security Rules, Cloud Functions; test rules in the emulator) · Cloudflare Pages · Razorpay · sql.js · PostHog · Resend · Sentry.
 
 ## Commands
 Run from the repo root (Git Bash or PowerShell; use `python`, not `python3`).

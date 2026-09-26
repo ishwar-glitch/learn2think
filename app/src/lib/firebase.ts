@@ -1,6 +1,5 @@
 import { initializeApp, getApps } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, RecaptchaVerifier,
-  signInWithPhoneNumber, signOut, type ConfirmationResult } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
 // Placeholder config from .env (see .env.example). No Firebase project exists yet.
@@ -20,19 +19,5 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 
 export const signInWithGoogle = () => signInWithPopup(auth, new GoogleAuthProvider());
-
-let verifier: RecaptchaVerifier | null = null;
-
-// Sends an SMS code. `container` is the id of an empty element for the (invisible) reCAPTCHA check.
-export async function sendPhoneCode(phone: string, container: string): Promise<ConfirmationResult> {
-  verifier ??= new RecaptchaVerifier(auth, container, { size: 'invisible' });
-  try {
-    return await signInWithPhoneNumber(auth, phone, verifier);
-  } catch (e) {
-    verifier.clear();
-    verifier = null;
-    throw e;
-  }
-}
 
 export const logOut = () => signOut(auth);
